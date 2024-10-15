@@ -1,0 +1,89 @@
+body {
+    font-family: Garamond, sans-serif;
+    margin: 20px;
+    background-color: #f9f9f9;
+}
+
+.resume {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    background-color: #ccc;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.contact-info h1 {
+    font-size: 2em;
+    margin: 0;
+}
+
+.contact-info p {
+    margin: 5px 0;
+}
+
+.section {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+}
+
+.section h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.section p {
+    margin: 5px 0;
+}
+
+strong {
+    font-weight: bold;
+}
+
+.section.education p strong {
+    color: #bf5700; 
+}
+
+.education ul {
+    list-style-type: none; 
+    padding-left: 0; 
+    margin: 0; 
+}
+
+.education li {
+    margin: 5px; 
+    padding: 0; 
+    margin-left: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #007BFF;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:visited {
+    color: purple;
+}
