@@ -59,7 +59,7 @@ strong {
     font-weight: bold;
 }
 
-.section.education p strong {
+.education p strong {
     color: #bf5700; 
 }
 
@@ -78,6 +78,7 @@ strong {
 a {
     text-decoration: none;
     color: #007BFF;
+    transition: text-decoration 1s ease;
 }
 
 a:hover {
