@@ -4,7 +4,7 @@
 }
 
 body {
-  height: 100vh;
+  height: 110vh;
   width: 100%;
   margin: 0;
   display: flex;
@@ -81,8 +81,27 @@ body {
 	margin-bottom: 20px;
 }
 
+#current-weather {
+  display: flex; /* Flexbox to arrange weather-info and icon-container horizontally */
+  justify-content: center; /* Center horizontally within the parent container */
+  align-items: center; /* Align items vertically */
+}
+
+#weather-info {
+  display: flex;
+  flex-direction: column; /* Stack description, temperature, and AQI vertically */
+  margin-right: 20px; /* Space between text and icon */
+  text-align: right; /* Align text to the right, optional */
+}
+
+#icon-container {
+  display: flex;
+  align-items: center; /* Align icon vertically in the middle */
+}
+
 #weather-icon {
   width: 100%; /* Adjusts the size of the weather icon */
+  justify-content: end;
 }
 
 #forecast-container {
