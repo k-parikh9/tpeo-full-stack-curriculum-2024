@@ -23,7 +23,7 @@
 
 <script>
 		// USE YOUR OWN API KEY
-		const apiKey = "";
+		const apiKey = "7f7e36587716d651a317bb656b1ec2e6";
 
         // variable that stores the city that is chosen
 		let city;
@@ -102,6 +102,66 @@
 			//printing the city object to the console
 			console.log(city);
             // BEGIN CODING HERE
+			// call the getWeather() function
+			getWeather();
+
+			// call the getAQI() function
+			getAQI();
+		}
+
+		// function that uses OpenWeatherMap's One Call API to get the weather and forecast for the city
+		function getWeather() {
+			// creates the API call with the latitude and longitude of the city
+			let apiCall = `api.openweathermap.org/data/2.5/forecast?lat=${city.lat}&lon=${city.lon}&appid=${apiKey}`;
+			// calls the API
+			fetch(apiCall)
+				.then((response) => 
+					// after recieving a response, take the response from the server and convert it to JSON 
+					response.json()
+				)
+				.then((data) => {
+					// after recieving the converted JSON data, pass the JSON to the renderWeather() function
+					renderWeather(data)
+				});
+		}
+
+		// function that uses OpenWeatherMap's Air Pollution API to get the air quality index for the city
+		function getAQI() {
+			// creates the API call with the latitude and longitude of the city
+			let apiCall = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${city.lat}&lon=${city.lon}&appid=${apiKey}`;
+			// calls the API
+			fetch(apiCall)
+				.then((response) => 
+					// after recieving a response, take the response from the server and convert it to JSON 
+					response.json()
+				)
+				.then((data) => {
+					// after recieving the converted JSON data, pass the JSON to the renderAQI() function
+					renderAQI(data)
+				});
+		}
+
+		function renderWeather(weatherData) {
+			// sets the global weather variable
+			weather = weatherData;
+			//printing the weather object to the console
+			console.log(weather);
+
+			// call the renderCurrentWeather() function
+			renderCurrentWeather();
+			// call the renderForecast() function
+			renderForecast();
+
+		}
+
+		function renderAQI(aqiData) {
+			// sets the global aqi variable
+			aqi = aqiData;
+			//printing the aqi object to the console
+			console.log(aqi);
+
+			// call the renderAQI() function
+			renderCurrentAQI();
 		}
 	</script>
 </html>
