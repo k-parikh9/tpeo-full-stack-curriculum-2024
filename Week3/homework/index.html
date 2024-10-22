@@ -10,6 +10,23 @@
 <body>
 	<div id='main-container'>
 		<div id='weather-container'>
+			<div id="current-day-location">
+				<h3 id="date"></h3>
+				<h2 id="location"></h2>
+			</div>
+
+			<!-- Container for current weather description, temperature, icon, and AQI -->
+			<div id="current-weather">
+				<p id="description"></p>
+				<span id="temperature"></span>
+				<img id="weather-icon" src="">
+				<p id="aqi"></p>
+			</div>
+
+			<!-- Container for 5-day forecast -->
+			<div id="forecast-container">
+				<!-- Dynamically generated forecast items will go here -->
+			</div>
 		</div> 
 	</div>
 	<div id='side-container'>
@@ -157,51 +174,22 @@
 		}
 
 		function renderCurrentWeather() {
-			// selects the weather-container element
-			const weatherContainer = document.querySelector('#weather-container');
-			// clears out the weather-container element
-			weatherContainer.innerHTML = '';
+			// Set current day and location
+			document.querySelector("#date").innerText = formatDate();
+			document.querySelector("#location").innerText = `Weather for ${city.fullName}`;
 
-			// creates a new div element for the weather
-			const currentWeather = document.createElement('div');
-			currentWeather.setAttribute('class', 'current-weather');
+			// Set current weather info
+			document.querySelector("#description").innerText = weather.list[0].weather[0].description;
+			document.querySelector("#temperature").innerText = `${weather.list[0].main.temp}°F`;
 
-			// Date and city name
-			const cityInfo = `
-				<h3>${formatDate()}</h3>
-				<h2>Weather for ${city.fullName}</h2>
-			`;
-
-			// Main weather info with icon as an svg file and temperature
-			let icon = weather.list[0].weather[0].icon;
-			const weatherInfo = `
-				<div class="weather-main-info">
-					<span class="weather-temp">${weather.list[0].main.temp}°F</span>
-					<img src="${icon}.svg" alt="Weather Icon">
-					<p>${weather.list[0].weather[0].description}</p>
-				</div>
-			`;
-
-			// Append the city name and weather info
-			currentWeather.innerHTML = cityInfo + weatherInfo;
-			weatherContainer.appendChild(currentWeather);
+			// Set weather icon
+			let icon = weather.list[0].weather[0].icon + ".svg";
+			document.querySelector("#weather-icon").src = `icons/${icon}`;
 		}
 
 		function renderForecast() {
-			// Select the weather-container element
-			const weatherContainer = document.querySelector('#weather-container');
-			
-			// Clear any existing forecast
-			const existingForecast = document.querySelector('.forecast-container');
-			if (existingForecast) {
-				existingForecast.remove();
-			}
-			
-			// Create a new div element for the forecast
-			const forecastContainer = document.createElement('div');
-			forecastContainer.setAttribute('class', 'forecast-container');
-
-			console.log(forecastContainer);
+			const forecastContainer = document.querySelector("#forecast-container");
+    		forecastContainer.innerHTML = ''; // Clear previous forecast
 			
 			// Loop through the next 5 days
 			for (let i = 0; i < 5; i++) {
@@ -223,18 +211,16 @@
 				}
 				
 				// Weather forecast for each day (day name, temp, icon)
+				let icon = weather.list[i * 8].weather[0].icon + ".svg";
 				const dayInfo = `
 					<p>${formatDate(i)}</p>
-					<img src="http://openweathermap.org/img/wn/${weather.list[i * 8].weather[0].icon}.png" alt="Weather Icon">
+					<img src="icons/${icon}" alt="Weather Icon">
 					<p>${minTemp}° to ${maxTemp}°</p>
 				`;
 				
 				forecastDay.innerHTML = dayInfo;
 				forecastContainer.appendChild(forecastDay);
 			}
-
-			// Append the forecast container to the weather container
-			weatherContainer.appendChild(forecastContainer);
 		}
 
 		function renderAQI(aqiData) {
@@ -248,20 +234,30 @@
 		}
 
 		function renderCurrentAQI() {
-			// selects the weather-container element
-			const weatherContainer = document.querySelector('#weather-container');
-			// creates a new div element for the air quality index
-			const aqiContainer = document.createElement('div');
-			aqiContainer.setAttribute('class', 'aqi-container');
+			// Set current AQI
+			document.querySelector("#aqi").innerText = `AQI: ${aqi.list[0].main.aqi}`;
 
-			// Air quality index
-			const aqiInfo = `
-				<p>AQI: ${aqi.list[0].main.aqi}</p>
-			`;
-
-			// Append the air quality index
-			aqiContainer.innerHTML = aqiInfo;
-			weatherContainer.appendChild(aqiContainer);
+			// Set AQI color
+			let aqiColor = '';
+			switch (aqi.list[0].main.aqi) {
+				case 1:
+					aqiColor = 'green';
+					break;
+				case 2:
+					aqiColor = 'yellow';
+					break;
+				case 3:
+					aqiColor = 'orange';
+					break;
+				case 4:
+					aqiColor = 'red';
+					break;
+				case 5:
+					aqiColor = 'purple';
+					break;
+				default:
+					aqiColor = 'gray';
+			}
 		}
 	</script>
 </html>
