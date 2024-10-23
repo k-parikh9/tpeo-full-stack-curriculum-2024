@@ -31,22 +31,6 @@ body {
   justify-content: space-between; /* Space between current weather and forecast */
 }
 
-.current-weather {
-  text-align: center; /* Center-aligns the current weather info */
-}
-
-.weather-main-info {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.weather-temp {
-  font-size: 48px; /* Larger font for temperature */
-  font-weight: bold;
-  margin-right: 10px;
-}
-
 #side-container {
   height: 100%;
   width: 25%; /* Adjusted width for search container */
@@ -100,8 +84,22 @@ body {
 }
 
 #weather-icon {
-  width: 100%; /* Adjusts the size of the weather icon */
+  width: 70%; /* Adjusts the size of the weather icon */
   justify-content: end;
+}
+
+#description {
+  font-size: 24px; /* Larger font for description */
+  font-weight: bold;
+}
+
+#temperature {
+  font-size: 48px; /* Larger font for temperature */
+  font-weight: bold;
+}
+
+#aqi {
+  font-size: 18px; /* Font size for AQI */
 }
 
 #forecast-container {
