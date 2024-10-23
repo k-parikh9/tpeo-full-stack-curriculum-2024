@@ -143,6 +143,7 @@
 				)
 				.then((data) => {
 					// after recieving the converted JSON data, pass the JSON to the renderWeather() function
+					console.log(data);
 					renderWeather(data)
 				})
 				.catch(error => console.log(error));
