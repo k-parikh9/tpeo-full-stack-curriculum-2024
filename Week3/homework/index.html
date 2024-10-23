@@ -183,9 +183,9 @@
 			document.querySelector("#date").innerText = formatDate();
 			document.querySelector("#location").innerText = `Weather for ${city.fullName}`;
 
-			// Set current weather info
+			// Set current weather info, rounding the temperature to the nearest whole number
 			document.querySelector("#description").innerText = weather.list[0].weather[0].description;
-			document.querySelector("#temperature").innerText = `${weather.list[0].main.temp}°F`;
+			document.querySelector("#temperature").innerText = `${Math.round(weather.list[0].main.temp)}°`;
 
 			// Set weather icon
 			let icon = weather.list[0].weather[0].icon + ".svg";
@@ -220,7 +220,7 @@
 				const dayInfo = `
 					<p>${formatDate(i)}</p>
 					<img src="icons/${icon}" alt="Weather Icon">
-					<p>${minTemp}° to ${maxTemp}°</p>
+					<p>${Math.round(minTemp)}° to ${Math.round(maxTemp)}°</p>
 				`;
 				
 				forecastDay.innerHTML = dayInfo;
