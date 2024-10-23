@@ -239,8 +239,6 @@
 		}
 
 		function renderCurrentAQI() {
-			// Set current AQI
-			document.querySelector("#aqi").innerText = `AQI: ${aqi.list[0].main.aqi}`;
 
 			// Set AQI color
 			let aqiColor = '';
@@ -263,6 +261,10 @@
 				default:
 					aqiColor = 'gray';
 			}
+
+			// Set AQI info and create a small colored box right next to it
+			document.querySelector("#aqi").innerText = `AQI: ${aqi.list[0].main.aqi}`;
+			document.querySelector("#aqi").style.color = aqiColor;
 		}
 	</script>
 </html>
