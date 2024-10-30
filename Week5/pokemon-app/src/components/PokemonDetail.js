@@ -5,14 +5,30 @@ import { Typography } from "@mui/material";
 
 function PokemonDetail() {
 
+  const { name } = useParams();
+  const [pokemon, setPokemon] = useState({});
 
-  const imageUrl = 'https://placehold.co/400'
+  function fetchPokemonDetail() {
+    axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
+      .then(response => setPokemon(response.data))
+      .catch(error => console.error(error));
+  }
+
+  useEffect(() => {
+    fetchPokemonDetail();
+  }, []);
+
+
+  const imageUrl = pokemon.sprites.other["official-artwork"].front_default;
 
   return (
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-      Pokemon Detail
+
+      <img src={imageUrl} alt={name} />
+
+      
     </div>
   );
 }
