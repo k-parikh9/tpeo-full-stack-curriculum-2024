@@ -1,69 +1,104 @@
 import React, { useState, useEffect } from "react";
-import "../styles/MainContainer.css"; // Import the CSS file for MainContainer
+import "../styles/MainContainer.css";
 
-function MainContainer(props) {
+function MainContainer({ selectedCity }) {
+  const [weather, setWeather] = useState(null);
+  const [aqi, setAQI] = useState(null);
+  const apiKey = "7f7e36587716d651a317bb656b1ec2e6"; // replace with your own API key
 
   function formatDate(daysFromNow = 0) {
     let output = "";
-    var date = new Date();
+    const date = new Date();
     date.setDate(date.getDate() + daysFromNow);
     output += date.toLocaleString("en-US", { weekday: "long" }).toUpperCase();
     output += " " + date.getDate();
     return output;
   }
 
-  /*
-  STEP 1: IMPORTANT NOTICE!
+  useEffect(() => {
+    if (selectedCity) {
+      getWeather(selectedCity.lat, selectedCity.lon);
+      getAQI(selectedCity.lat, selectedCity.lon);
+    }
+  }, [selectedCity]);
 
-  Before you start, ensure that both App.js and SideContainer.js are complete. The reason is MainContainer 
-  is dependent on the city selected in SideContainer and managed in App.js. You need the data to flow from 
-  App.js to MainContainer for the selected city before making an API call to fetch weather data.
-  */
-  
-  /*
-  STEP 2: Manage Weather Data with State.
-  
-  Just like how we managed city data in App.js, we need a mechanism to manage the weather data 
-  for the selected city in this component. Use the 'useState' hook to create a state variable 
-  (e.g., 'weather') and its corresponding setter function (e.g., 'setWeather'). The initial state can be 
-  null or an empty object.
-  */
-  
-  
-  /*
-  STEP 3: Fetch Weather Data When City Changes.
-  
-  Whenever the selected city (passed as a prop) changes, you should make an API call to fetch the 
-  new weather data. For this, use the 'useEffect' hook.
+  const getWeather = (lat, lon) => {
+    const apiCall = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
+    fetch(apiCall)
+      .then(response => response.json())
+      .then(data => setWeather(data))
+      .catch(error => console.error(error));
+  };
 
-  The 'useEffect' hook lets you perform side effects (like fetching data) in functional components. 
-  Set the dependency array of the 'useEffect' to watch for changes in the city prop. When it changes, 
-  make the API call.
+  const getAQI = (lat, lon) => {
+    const apiCall = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+    fetch(apiCall)
+      .then(response => response.json())
+      .then(data => setAQI(data))
+      .catch(error => console.error(error));
+  };
 
-  After fetching the data, use the 'setWeather' function from the 'useState' hook to set the weather data 
-  in your state.
-  */
-  
-  
   return (
     <div id="main-container">
       <div id="weather-container">
-        {/* 
-        STEP 4: Display Weather Data.
-        
-        With the fetched weather data stored in state, use conditional rendering (perhaps the ternary operator) 
-        to display it here. Make sure to check if the 'weather' state has data before trying to access its 
-        properties to avoid runtime errors. 
+        {weather && aqi ? (
+          <>
+            {/* New div container for current day location and weather */}
+            <div id="current-weather-container">
+              <div id="current-day-location">
+                <h3 id="date">{formatDate()}</h3>
+                <h2 id="location">Weather for {selectedCity.fullName}</h2>
+              </div>
+              <div id="current-weather">
+                <div id="weather-info">
+                  <p id="description">{weather.list[0].weather[0].description}</p>
+                  <span id="temperature">{Math.round(weather.list[0].main.temp)}°</span>
+                  <p id="aqi" style={{ color: getAQIColor(aqi.list[0].main.aqi) }}>
+                    AQI: {aqi.list[0].main.aqi}
+                  </p>
+                </div>
+                <div id="icon-container">
+                  <img
+                    id="weather-icon"
+                    src={require(`../icons/${weather.list[0].weather[0].icon}.svg`)}
+                    alt="Weather Icon"
+                  />
+                </div>
+              </div>
+            </div>
+            <div id="forecast-container">
+              {Array.from({ length: 5 }).map((_, i) => {
+                const dayWeather = weather.list[i * 8];
+                const minTemp = Math.min(...weather.list.slice(i * 8, i * 8 + 8).map(w => w.main.temp_min));
+                const maxTemp = Math.max(...weather.list.slice(i * 8, i * 8 + 8).map(w => w.main.temp_max));
 
-        Break down the data object and figure out what you want to display (e.g., temperature, weather description).
-        This is a good section to play around with React components! Create your own - a good example could be a WeatherCard
-        component that takes in props, and displays data for each day of the week.
-        */}
+                return (
+                  <div className="forecast-day" key={i}>
+                    <p>{formatDate(i)}</p>
+                    <img src={require(`../icons/${dayWeather.weather[0].icon}.svg`)} alt="Weather Icon"/>
+                    <p>{Math.round(minTemp)}° to {Math.round(maxTemp)}°</p>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        ) : (
+          <p>Loading...</p>
+        )}
       </div>
     </div>
   );
+
+  function getAQIColor(aqi) {
+    switch (aqi) {
+      case 1: return "green";
+      case 2: return "yellow";
+      case 3: return "orange";
+      case 4: return "red";
+      case 5: return "purple";
+      default: return "gray";
+    }
+  }
 }
 
-
 export default MainContainer;
-
