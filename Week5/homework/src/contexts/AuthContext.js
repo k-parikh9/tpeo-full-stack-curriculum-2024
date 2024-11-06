@@ -19,19 +19,38 @@ export function AuthProvider({ children }) {
     
 
     // Login function that validates the provided username and password.
-    const login = () => {
-        
+    const login = async (username, password) => {
+        try{
+            const response = await fetch('https://tpeo-todo.vercel.app/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            if (!response.ok) {
+                throw new Error('Login failed');
+            }
+
+            const data = await response.json();
+            navigate('/');
+
+        } catch (error) {
+            console.error('Login error:', error);
+            alert('Login failed');
+        }
     };
 
     // Logout function to clear user data and redirect to the login page.
     const logout = () => {
-        
+        navigate('/login');
     };
 
     // An object containing our state and functions related to authentication.
     // By using this context, child components can easily access and use these without prop drilling.
     const contextValue = {
-        
+
     };
 
     // The AuthProvider component uses the AuthContext.Provider to wrap its children.

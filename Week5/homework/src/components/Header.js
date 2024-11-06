@@ -1,9 +1,9 @@
 import React from "react";
 import { AppBar, Toolbar, Typography, Button } from "@mui/material";
-//import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 
 function Header() {
-  
+  const { logout } = useAuth();
 
   return (
     <AppBar
@@ -22,7 +22,7 @@ function Header() {
           {`Name's To-Do List`}
         </Typography>
         <Button
-          // onClick={logout}
+          onClick={logout}
           sx={{
             backgroundColor: "#FFEBEB",
             "&:hover": {

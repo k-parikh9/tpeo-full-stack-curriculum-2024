@@ -62,6 +62,7 @@ export default function HomePage() {
     // TODO: Support removing/checking off todo items in your todo list through the API.
     // Similar to adding tasks, when checking off a task, you should send a request
     // to the API to update the task's status and then update the state based on the response.
+    
   }
 
   // Function to compute a message indicating how many tasks are unfinished.

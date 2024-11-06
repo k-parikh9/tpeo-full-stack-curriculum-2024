@@ -8,13 +8,14 @@ import {
   Alert,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-//import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 
 function LoginPage() {
   // Access the MUI theme for potential theme-related functionalities.
   const theme = useTheme();
 
   // TODO: Extract login function and error from our authentication context.
+  const { login, error } = useAuth();
 
 
   // State to hold the username and password entered by the user.
@@ -23,7 +24,9 @@ function LoginPage() {
 
   // TODO: Handle login function.
   const handleLogin = () => {
-    
+    // Call the login function from the authentication context.
+    // Pass the username and password as arguments.
+    login(username, password);
   };
 
 
@@ -89,6 +92,11 @@ function LoginPage() {
           </Button>
         </Box>
         {/* TODO: Display Login Error if it exists */}
+        {error && (
+          <Alert severity="error" sx={{ width: "100%", mt: 3 }}>
+            {error}
+          </Alert>
+        )}
       </Box>
     </Container>
   );
