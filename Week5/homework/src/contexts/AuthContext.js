@@ -16,41 +16,37 @@ export const useAuth = () => {
 export function AuthProvider({ children }) {
     const navigate = useNavigate();
     
-    
+    const [currentUser, setCurrentUser] = useState(localStorage.getItem("username") || null);
+    const [loginError, setLoginError] = useState(null);
 
+    const VALID_USERNAME = 'krish';
+    const VALID_PASSWORD = 'racecar';
+    
     // Login function that validates the provided username and password.
     const login = async (username, password) => {
-        try{
-            const response = await fetch('https://tpeo-todo.vercel.app/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
-            });
-
-            if (!response.ok) {
-                throw new Error('Login failed');
-            }
-
-            const data = await response.json();
+        if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+            setCurrentUser(username);
+            localStorage.setItem("username", username);
             navigate('/');
-
-        } catch (error) {
-            console.error('Login error:', error);
-            alert('Login failed');
+        } else {
+            setLoginError('Invalid username or password.');
         }
     };
 
     // Logout function to clear user data and redirect to the login page.
     const logout = () => {
+        setCurrentUser(null);
+        localStorage.removeItem("username");
         navigate('/login');
     };
 
     // An object containing our state and functions related to authentication.
     // By using this context, child components can easily access and use these without prop drilling.
     const contextValue = {
-
+        currentUser,
+        loginError,
+        login,
+        logout
     };
 
     // The AuthProvider component uses the AuthContext.Provider to wrap its children.

@@ -15,7 +15,7 @@ function LoginPage() {
   const theme = useTheme();
 
   // TODO: Extract login function and error from our authentication context.
-  const { login, error } = useAuth();
+  const { loginError, login } = useAuth();
 
   // State to hold the username and password entered by the user.
   const [username, setUsername] = useState("");
@@ -23,8 +23,6 @@ function LoginPage() {
 
   // TODO: Handle login function.
   const handleLogin = () => {
-    // Call the login function from the authentication context.
-    // Pass the username and password as arguments.
     login(username, password);
   };
 
@@ -90,9 +88,9 @@ function LoginPage() {
           </Button>
         </Box>
         {/* TODO: Display Login Error if it exists */}
-        {error && (
-          <Alert severity="error" sx={{ width: "100%", mt: 3 }}>
-            {error}
+        {loginError && (
+          <Alert severity="error">
+            {loginError}
           </Alert>
         )}
       </Box>
