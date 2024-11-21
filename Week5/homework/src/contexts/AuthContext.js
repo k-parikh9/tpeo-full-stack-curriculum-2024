@@ -16,6 +16,7 @@ export const useAuth = () => {
 export function AuthProvider({ children }) {
     const navigate = useNavigate();
     
+
     const [currentUser, setCurrentUser] = useState(localStorage.getItem("username") || null);
     const [loginError, setLoginError] = useState(null);
 

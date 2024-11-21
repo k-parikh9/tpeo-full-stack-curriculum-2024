@@ -42,7 +42,13 @@ app.get("/tasks", async (req, res) => {
 });
 
 // GET: Endpoint to retrieve all tasks for a user
-// ... 
+app.get("/tasks/:user", async (req, res) => {
+  try {
+
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+})
 
 // POST: Endpoint to add a new task
 // ...
