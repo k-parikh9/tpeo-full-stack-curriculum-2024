@@ -1,5 +1,6 @@
 // Importing Firebase Admin SDK to interact with Firebase services
 const admin = require("firebase-admin");
+const express = require("express");
 require("dotenv").config();
 
 // Parsing the FIREBASE_CREDENTIALS environment variable from a string into a JavaScript object
@@ -22,5 +23,20 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
+
+// Firebase Admin Authentication Middleware
+const auth = (req, res, next) => {
+  try {
+    const tokenId = req.get("Authorization").split("Bearer ")[1];
+    admin.auth().verifyIdToken(tokenId)
+      .then((decoded) => {
+        req.token = decoded;
+        next();
+      })
+      .catch((error) => res.status(401).send(error));
+  } catch (error) {
+    res.status(400).send("Invalid token");
+  }
+};
 
 module.exports = db;

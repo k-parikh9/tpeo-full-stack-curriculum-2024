@@ -1,6 +1,27 @@
 // Importing necessary hooks and functionalities
 import React, { createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { initializeApp } from 'firebase/app';
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+} from 'firebase/auth';
+
+// Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyBvxnhouXnmjSAGxwc3p71BKH-GX8AsXi0",
+    authDomain: "todo-app-db-a432b.firebaseapp.com",
+    databaseURL: "https://todo-app-db-a432b-default-rtdb.firebaseio.com",
+    projectId: "todo-app-db-a432b",
+    storageBucket: "todo-app-db-a432b.firebasestorage.app",
+    messagingSenderId: "457683659415",
+    appId: "1:457683659415:web:b9e0078943c8a1e46117d2",
+    measurementId: "G-FR725PR4C1"
+  };
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 // Creating a context for authentication. Contexts provide a way to pass data through 
 // the component tree without having to pass props down manually at every level.
@@ -16,29 +37,45 @@ export const useAuth = () => {
 export function AuthProvider({ children }) {
     const navigate = useNavigate();
     
-
-    const [currentUser, setCurrentUser] = useState(localStorage.getItem("username") || null);
+    const [currentUser, setCurrentUser] = useState(null);
     const [loginError, setLoginError] = useState(null);
 
-    const VALID_USERNAME = 'krish';
-    const VALID_PASSWORD = 'racecar';
+    // Sign up new users
+    const register = (email, password) => {
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            setCurrentUser(userCredential.user);
+            // correct and formal way of getting access token
+            userCredential.user.getIdToken().then((accessToken) => {
+                console.log(accessToken)
+            })
+            navigate("/");
+        })
+        .catch((error) => {
+            setLoginError(error.message);
+        });
+    };
     
     // Login function that validates the provided username and password.
-    const login = async (username, password) => {
-        if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-            setCurrentUser(username);
-            localStorage.setItem("username", username);
-            navigate('/');
-        } else {
-            setLoginError('Invalid username or password.');
-        }
-    };
+    const login = (email, password) => {
+        signInWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            setCurrentUser(userCredential.user);
+            // this method of retrieving access token also works
+            console.log(userCredential.user.accessToken)
+            navigate("/");
+          })
+          .catch((error) => {
+            setLoginError(error.message);
+          });
+      };
 
     // Logout function to clear user data and redirect to the login page.
     const logout = () => {
+        auth.signOut().then(() => {
         setCurrentUser(null);
-        localStorage.removeItem("username");
-        navigate('/login');
+            navigate("/login");
+        });
     };
 
     // An object containing our state and functions related to authentication.
@@ -46,6 +83,7 @@ export function AuthProvider({ children }) {
     const contextValue = {
         currentUser,
         loginError,
+        register,
         login,
         logout
     };

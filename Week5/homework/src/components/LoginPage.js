@@ -15,15 +15,20 @@ function LoginPage() {
   const theme = useTheme();
 
   // TODO: Extract login function and error from our authentication context.
-  const { loginError, login } = useAuth();
+  const { loginError, login, register } = useAuth();
 
   // State to hold the username and password entered by the user.
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isRegisterMode, setIsRegisterMode] = useState(false);
 
   // TODO: Handle login function.
   const handleLogin = () => {
-    login(username, password);
+    if (isRegisterMode) {
+      register(username, password);
+    } else {
+      login(username, password);
+    }
   };
 
   return (
@@ -47,7 +52,7 @@ function LoginPage() {
           src="/longhorn.jpg"
         ></Box>
         <Typography component="h1" variant="h4" fontWeight="bold">
-          Login
+          {isRegisterMode ? "Register" : "Login"} {/* Toggle Heading */}
         </Typography>
         <Box sx={{ mt: 1 }}>
           <TextField
@@ -56,9 +61,9 @@ function LoginPage() {
             required
             fullWidth
             id="username"
-            label="Username"
+            label="Email"
             InputLabelProps={{ shrink: true }}
-            placeholder="admin"
+            placeholder="example@example.com"
             autoFocus
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -72,7 +77,7 @@ function LoginPage() {
             type="password"
             id="password"
             InputLabelProps={{ shrink: true }}
-            placeholder="racecar"
+            placeholder="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -84,7 +89,17 @@ function LoginPage() {
             sx={{ mt: 3, mb: 2 }}
             onClick={handleLogin}
           >
-            Login
+            {isRegisterMode ? "Register" : "Login"} {/* Toggle Button */}
+          </Button>
+          <Button
+            fullWidth
+            color="secondary"
+            sx={{ mt: 1 }}
+            onClick={() => setIsRegisterMode((prev) => !prev)} // Toggle between modes
+          >
+            {isRegisterMode
+              ? "Already have an account? Login"
+              : "Don't have an account? Register"}
           </Button>
         </Box>
         {/* TODO: Display Login Error if it exists */}
