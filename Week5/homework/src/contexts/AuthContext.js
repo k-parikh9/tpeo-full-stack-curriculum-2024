@@ -8,9 +8,9 @@ import {
     signInWithEmailAndPassword,
 } from 'firebase/auth';
 
-// Firebase configuration
+// Firebase configuration, getting apiKey from .env file
 const firebaseConfig = {
-    apiKey: "AIzaSyBvxnhouXnmjSAGxwc3p71BKH-GX8AsXi0",
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
     authDomain: "todo-app-db-a432b.firebaseapp.com",
     databaseURL: "https://todo-app-db-a432b-default-rtdb.firebaseio.com",
     projectId: "todo-app-db-a432b",
