@@ -29,7 +29,7 @@ export default function HomePage() {
     if (!currentUser) {
       navigate('/login');
     } else {
-      fetch(`https://tpeo-todo.vercel.app/tasks/${currentUser}`)
+      fetch(`http://localhost:3001/tasks/${currentUser.uid}`)
       .then(response => response.json())
       .then(data => {
         setTaskList(data);
@@ -38,7 +38,7 @@ export default function HomePage() {
         console.error('Failed to fetch:', error);
       })
     }
-  }, [currentUser]);
+  }, [currentUser, navigate]);
 
   // TODO: Support retrieving your todo list from the API.
   // Currently, the tasks are hardcoded. You'll need to make an API call
@@ -46,32 +46,31 @@ export default function HomePage() {
 
   function handleAddTask() {
     // Check if task name is provided and if it doesn't already exist.
-    if (newTaskName && !taskList.some((task) => task.name === newTaskName)) {
+    if (newTaskName && !taskList.some((task) => task.task === newTaskName)) {
 
       // TODO: Support adding todo items to your todo list through the API.
       // In addition to updating the state directly, you should send a request
       // to the API to add a new task and then update the state based on the response.
 
-      fetch('https://tpeo-todo.vercel.app/tasks/', {
+      fetch('http://localhost:3001/tasks/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user: currentUser,
-          name: newTaskName,
-          finished: false,
+          task: newTaskName,
+          user: currentUser.uid,
         }),
       })
       .then(response => response.json())
       .then(data => {
         setTaskList([...taskList, data]);
-        setNewTaskName("");
+        setNewTaskName(newTaskName);
       })
       .catch(error => {
         console.error('Failed to post:', error);
       })
-    } else if (taskList.some((task) => task.name === newTaskName)) {
+    } else if (taskList.some((task) => task.task === newTaskName)) {
       alert("Task already exists!");
     }
   }
@@ -82,17 +81,19 @@ export default function HomePage() {
     // Similar to adding tasks, when checking off a task, you should send a request
     // to the API to update the task's status and then update the state based on the response.
 
-    fetch(`https://tpeo-todo.vercel.app/tasks/${task.id}`, {
-      method: 'DELETE'
+    fetch(`http://localhost:3001/tasks/${task.id}`, {
+      method: 'DELETE',
     })
-      .then(response => response.json())
-      .then(() => {
-        const updatedTaskList = taskList.filter((existingTask) => existingTask.id !== task.id);
-        setTaskList(updatedTaskList);
-      })
-      .catch(error => {
-        console.error('Failed to delete:', error);
-      })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to delete2', response.status);
+      }
+      const updatedTaskList = taskList.filter((t) => t.id !== task.id);
+      setTaskList(updatedTaskList);
+    })
+    .catch(error => {
+      console.error('Failed to delete:', error);
+    })
   }
 
   // Function to compute a message indicating how many tasks are unfinished.
@@ -162,14 +163,14 @@ export default function HomePage() {
             <List sx={{ marginTop: 3 }}>
               {taskList.map((task) => (
                 <ListItem
-                  key={task.name}
+                  key={task.task}
                   dense
                 >
                   <Checkbox
                     checked={task.finished}
                     onChange={() => toggleTaskCompletion(task)}
                   />
-                  <ListItemText primary={task.name} />
+                  <ListItemText primary={task.task} />
                 </ListItem>
               ))}
             </List>

@@ -14,18 +14,18 @@ require("dotenv").config();
 // Your .env file should be added to your .gitignore to keep sensitive data secure.
 //  -> This is already done for you. But double check! You really don't want your credentials pushed to the web.
 
-const creds = JSON.parse(process.env.FIREBASE_CREDENTIALS);
+const serviceAccount = require("./creds.json");
 
 // Initializing Firebase Admin SDK with credentials and database URL
 admin.initializeApp({
-  credential: admin.credential.cert(creds),
-  databaseURL: "https://todo-app-db-a432b-default-rtdb.firebaseio.com/",  // TODO: replace with your database URL
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://todo-app-db-a432b-default-rtdb.firebaseio.com",  // TODO: replace with your database URL
 });
 
 const db = admin.firestore();
 
 // Firebase Admin Authentication Middleware
-const auth = (req, res, next) => {
+const authMiddleware = (req, res, next) => {
   try {
     const tokenId = req.get("Authorization").split("Bearer ")[1];
     admin.auth().verifyIdToken(tokenId)
@@ -39,4 +39,4 @@ const auth = (req, res, next) => {
   }
 };
 
-module.exports = db;
+module.exports = { db, authMiddleware };

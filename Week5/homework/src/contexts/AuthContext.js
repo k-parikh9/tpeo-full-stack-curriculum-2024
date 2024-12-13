@@ -62,7 +62,6 @@ export function AuthProvider({ children }) {
           .then((userCredential) => {
             setCurrentUser(userCredential.user);
             // this method of retrieving access token also works
-            console.log(userCredential.user.accessToken)
             navigate("/");
           })
           .catch((error) => {

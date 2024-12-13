@@ -19,9 +19,9 @@ app.use(bodyParser.json());
 // Your API routes will go here...
 
 // GET: Endpoint to retrieve all tasks for a user
-app.get("/tasks", authMiddleware, async (req, res) => {
+app.get("/tasks/:user", async (req, res) => {
   try {
-    const snapshot = await db.collection("tasks").where("user", "==", req.token.uid).get();
+    const snapshot = await db.collection("tasks").where("user", "==", req.params.user).get();
     let tasks = [];
     snapshot.forEach((doc) => {
       tasks.push({
@@ -36,14 +36,12 @@ app.get("/tasks", authMiddleware, async (req, res) => {
 });
 
 // POST: Endpoint to add a new task
-app.post("/tasks", authMiddleware, async (req, res) => {
+app.post("/tasks", async (req, res) => {
   try {
-    const { title, description, user } = req.body;
+    const { task, user } = req.body;
     const newTask = {
-      title,
-      description,
-      user,
-      completed: false,
+      task,
+      user
     };
     const docRef = await db.collection("tasks").add(newTask);
     res.status(201).send({ id: docRef.id, ...newTask });
@@ -53,7 +51,7 @@ app.post("/tasks", authMiddleware, async (req, res) => {
 });
 
 // DELETE: Endpoint to remove a task
-app.delete("/tasks/:id", authMiddleware, async (req, res) => {
+app.delete("/tasks/:id", async (req, res) => {
   try {
     const taskRef = db.collection("tasks").doc(req.params.id);
     const task = await taskRef.get();
@@ -68,7 +66,7 @@ app.delete("/tasks/:id", authMiddleware, async (req, res) => {
     if (task.data().user !== req.token.uid) {
       res.status(403).send("Unauthorized");
       return;
-    }
+    } 
 
     await taskRef.delete();
     res.status(200).send("Task deleted successfully");
