@@ -86,7 +86,7 @@ export default function HomePage() {
     })
     .then(response => {
       if (!response.ok) {
-        throw new Error('Failed to delete2', response.status);
+        throw new Error(response.status);
       }
       const updatedTaskList = taskList.filter((t) => t.id !== task.id);
       setTaskList(updatedTaskList);
