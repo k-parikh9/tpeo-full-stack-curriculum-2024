@@ -14,7 +14,8 @@ require("dotenv").config();
 // Your .env file should be added to your .gitignore to keep sensitive data secure.
 //  -> This is already done for you. But double check! You really don't want your credentials pushed to the web.
 
-const serviceAccount = require(process.env.FIREBASE_CREDENTIALS);
+// require creds.json file
+const serviceAccount = require("./creds.json");
 
 // Initializing Firebase Admin SDK with credentials and database URL
 admin.initializeApp({

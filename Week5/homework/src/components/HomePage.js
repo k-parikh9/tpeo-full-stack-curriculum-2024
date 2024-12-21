@@ -29,7 +29,7 @@ export default function HomePage() {
     if (!currentUser) {
       navigate('/login');
     } else {
-      fetch(`http://localhost:3001/tasks/${currentUser.uid}`)
+      fetch(`${process.env.REACT_APP_BACKEND}/tasks/${currentUser.uid}`)
       .then(response => response.json())
       .then(data => {
         setTaskList(data);
@@ -52,7 +52,7 @@ export default function HomePage() {
       // In addition to updating the state directly, you should send a request
       // to the API to add a new task and then update the state based on the response.
 
-      fetch('http://localhost:3001/tasks/', {
+      fetch(`${process.env.REACT_APP_BACKEND}/tasks/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +81,9 @@ export default function HomePage() {
     // Similar to adding tasks, when checking off a task, you should send a request
     // to the API to update the task's status and then update the state based on the response.
 
-    fetch(`http://localhost:3001/tasks/${task.id}`, {
+    console.log(`${process.env.REACT_APP_BACKEND}/tasks/${task.id}`)
+
+    fetch(`${process.env.REACT_APP_BACKEND}/tasks/${task.id}`, {
       method: 'DELETE',
     })
     .then(response => {

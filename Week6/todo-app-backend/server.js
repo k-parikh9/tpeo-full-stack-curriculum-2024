@@ -2,15 +2,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+require("dotenv").config();
 
 // Importing the Firestore database instance from firebase.js
 const { db, authMiddleware } = require("./firebase");
 
 // Creating an instance of Express
 const app = express();
-
-// Loading environment variables from a .env file into process.env
-require("dotenv").config();
 
 // Middlewares to handle cross-origin requests and to parse the body of incoming requests to JSON
 app.use(cors());
@@ -76,7 +74,7 @@ app.delete("/tasks/:id", async (req, res) => {
 });
 
 // Setting the port for the server to listen on
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 // Starting the server
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
