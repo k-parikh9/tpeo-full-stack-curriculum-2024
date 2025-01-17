@@ -75,28 +75,33 @@ export default function HomePage() {
     }
   }
 
-  // Function to toggle the 'finished' status of a task.
   function toggleTaskCompletion(task) {
-    // TODO: Support removing/checking off todo items in your todo list through the API.
-    // Similar to adding tasks, when checking off a task, you should send a request
-    // to the API to update the task's status and then update the state based on the response.
+    // Log the endpoint for debugging
+    console.log(`${process.env.REACT_APP_BACKEND}/tasks/remove`);
 
-    console.log(`${process.env.REACT_APP_BACKEND}/tasks/${task.id}`)
-
-    fetch(`${process.env.REACT_APP_BACKEND}/tasks/${task.id}`, {
-      method: 'DELETE',
+    // Make a POST request to the new endpoint with the task ID and user
+    fetch(`${process.env.REACT_APP_BACKEND}/tasks/remove`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: task.id,
+        user: task.user, // Ensure `task.user` is included or replace it with the appropriate user identifier
+      }),
     })
     .then(response => {
       if (!response.ok) {
         throw new Error(response.statusText);
       }
+      // Filter out the deleted task from the list and update state
       const updatedTaskList = taskList.filter((t) => t.id !== task.id);
       setTaskList(updatedTaskList);
     })
     .catch(error => {
-      console.error('Failed to delete:', error);
-    })
-  }
+      console.error('Failed to delete task:', error);
+    });
+}
 
   // Function to compute a message indicating how many tasks are unfinished.
   function getUnfinishedTaskMessage() {

@@ -48,10 +48,18 @@ app.post("/tasks", async (req, res) => {
   }
 });
 
-// DELETE: Endpoint to remove a task
-app.delete("/tasks/:id", async (req, res) => {
+// POST: Endpoint to remove a task (replacing DELETE)
+app.post("/tasks/remove", async (req, res) => {
   try {
-    const taskRef = db.collection("tasks").doc(req.params.id);
+    const { id, user } = req.body;
+
+    // Check if the task ID is provided
+    if (!id) {
+      res.status(400).send("Task ID is required");
+      return;
+    }
+
+    const taskRef = db.collection("tasks").doc(id);
     const task = await taskRef.get();
 
     // Check if the task exists
@@ -61,10 +69,10 @@ app.delete("/tasks/:id", async (req, res) => {
     }
 
     // Check if the task belongs to the user
-    if (task.data().user !== req.token.uid) {
+    if (task.data().user !== user) {
       res.status(403).send("Unauthorized");
       return;
-    } 
+    }
 
     await taskRef.delete();
     res.status(200).send("Task deleted successfully");
