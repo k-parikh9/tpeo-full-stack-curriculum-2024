@@ -76,9 +76,6 @@ export default function HomePage() {
   }
 
   function toggleTaskCompletion(task) {
-    // Log the endpoint for debugging
-    console.log(`${process.env.REACT_APP_BACKEND}/tasks/remove`);
-
     // Make a POST request to the new endpoint with the task ID and user
     fetch(`${process.env.REACT_APP_BACKEND}/tasks/remove`, {
       method: 'POST',

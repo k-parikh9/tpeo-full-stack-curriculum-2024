@@ -46,10 +46,6 @@ export function AuthProvider({ children }) {
         createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             setCurrentUser(userCredential.user);
-            // correct and formal way of getting access token
-            userCredential.user.getIdToken().then((accessToken) => {
-                console.log(accessToken)
-            })
             navigate("/");
         })
         .catch((error) => {
@@ -62,7 +58,6 @@ export function AuthProvider({ children }) {
         signInWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
             setCurrentUser(userCredential.user);
-            // this method of retrieving access token also works
             navigate("/");
           })
           .catch((error) => {
